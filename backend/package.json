@@ -1,0 +1,35 @@
+{
+  "name": "weigh-in",
+  "version": "1.0.0",
+  "description": "A web-based debate system",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cnolan3/weigh-in.git"
+  },
+  "author": "Connor Nolan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cnolan3/weigh-in/issues"
+  },
+  "homepage": "https://github.com/cnolan3/weigh-in#readme",
+  "devDependencies": {
+    "apidoc": "^0.17.6",
+    "sequelize-cli": "^4.0.0"
+  },
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "jsonwebtoken": "^8.2.0",
+    "morgan": "^1.9.0",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "pg": "^7.4.1",
+    "sequelize": "^4.37.5"
+  }
+}
