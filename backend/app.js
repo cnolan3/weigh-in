@@ -9,6 +9,7 @@ const models = require('./models');
 const app = express();
 
 const users = require('./routes/users');
+const debates = require('./routes/debate');
 
 const port = 4000;
 
@@ -32,6 +33,7 @@ require('./config/passport')(passport);
 
 // routes
 app.use('/users', users);
+app.use('/debates', debates);
 
 app.disable('etag');
 

@@ -166,34 +166,53 @@ router.post('/authenticate', (req, res, next) => {
  *
  * @apiSuccess {String} type user type in topic
  *
- * @apiError (404) TopicDoesNotExist the requested topic does not exist
- * @apiError (500) Error             server error
+ * @apiError (404) TopicNotFound the requested topic does not exist
+ * @apiError (404) UserNotFound  the requested user does not exist
+ * @apiError (500) Error         server error
 **/
 router.get('/usertype', (req, res, next) => {
-  const topic = req.body.topic;
-  const username = req.body.username;
+  const topic = req.query.topic;
+  const username = req.query.username;
 
+  // check if topic exists
   models.topic.findOne({
     where: { name: topic }
   }).then(t => {
     if(t) {
-      t.getUser({
+      // search for users associated with the topic
+      t.getUsers({
         where: { username: username }
       }).then(user => {
-        if(user) 
-          res.status(200).json({ type: user.type });
-        else
-          res.status(200).json({ type: 'basic' });
+        // check if the user exists
+        models.user.findOne({
+          where: { username: username }
+        }).then(u => {
+          if(u) {
+            // return user type on topic,
+            // if the user exists and is not associated
+            // with this topic, 'basic' is returned,
+            // otherwise, the user type is returned
+            if(user[0])
+              return res.status(200).json({ type: user[0].cert_list.type });
+            else
+              return res.status(200).json({ type: 'basic' });
+          }
+          else
+            return res.status(404).send('UserNotFound');
+        }).catch(err => {
+          throw err;
+          return res.status(500).send('Error');
+        });
       }).catch(err => {
         throw err;
-        res.status(500).send('Error');
+        return res.status(500).send('Error');
       });
     }
     else
-      return res.status(404).send('TopicDoesNotExist');
+      return res.status(404).send('TopicNotFound');
   }).catch(err => {
     throw err;
-    res.status(500).send('Error');
+    return res.status(500).send('Error');
   });
 });
 

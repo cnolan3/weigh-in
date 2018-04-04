@@ -1,18 +1,15 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('debates', {
+    return queryInterface.createTable('main_comments', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      title: {
-        type: Sequelize.STRING
-      },
-      description: {
-        type: Sequelize.STRING
+      text: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -22,16 +19,16 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      topicId: {
+      debateId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'topics',
+          model: 'debates',
           key: 'id'
         },
       },
       userId: {
         type: Sequelize.INTEGER,
-        references: {
+        refrences: {
           model: 'users',
           key: 'id'
         },
@@ -39,6 +36,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('debates');
+    return queryInterface.dropTable('main_comments');
   }
 };

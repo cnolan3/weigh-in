@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     role: DataTypes.ENUM('user', 'admin')
   }, {});
   user.associate = function(models) {
-    user.belongsToMany(models.topic, { through: models.cert_list });
+    user.belongsToMany(models.topic, { through: models.cert_list, constraints: false });
+    user.hasMany(models.debate);
   };
   return user;
 };

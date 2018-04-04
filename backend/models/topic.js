@@ -4,8 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING
   }, {});
   topic.associate = function(models) {
-    topic.belongsToMany(models.user, { through: models.cert_list });
-    topic.hasMany(models.debate);
+    topic.belongsToMany(models.user, { through: models.cert_list, constraints: false });
+    topic.hasMany(models.debate);    
   };
   return topic;
 };
