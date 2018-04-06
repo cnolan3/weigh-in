@@ -18,7 +18,8 @@
   "homepage": "https://github.com/cnolan3/weigh-in#readme",
   "devDependencies": {
     "apidoc": "^0.17.6",
-    "sequelize-cli": "^4.0.0"
+    "sequelize-cli": "^4.0.0",
+    "sequelize-mock": "^0.10.2"
   },
   "dependencies": {
     "bcrypt": "^1.0.3",

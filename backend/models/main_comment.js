@@ -4,7 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     text: DataTypes.TEXT
   }, {});
   main_comment.associate = function(models) {
-    main_comment.hasOne(models.user, { constraints: false });
+    main_comment.belongsTo(models.user);
+    main_comment.belongsTo(models.debate);
   };
   return main_comment;
 };

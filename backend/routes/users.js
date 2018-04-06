@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const router = express.Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
@@ -36,15 +37,15 @@ const config = require(__dirname + '/../config/config.json')[env];
 **/
 router.post('/register', (req, res, next) => {
   /// check of the username already exists
-  models.users.findOne({
+  models.user.findOne({
     where: { username: req.body.username },
     attributes: ['id'],
   }).then((user) => {
     if(!user) {
       /// check for complete info
       if(!req.body.username ||
-         !req.body.firstname ||
-         !req.body.lastname ||
+         !req.body.firstName ||
+         !req.body.lastName ||
          !req.body.email ||
          !req.body.password)
         return res.status(400).send('IncompleteUserObject');
@@ -52,32 +53,39 @@ router.post('/register', (req, res, next) => {
       /// create new user object
       let newUser = {
         username: req.body.username,
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         email: req.body.email,
         password: req.body.password,
         role: 'user'
       }
       
       /// add new user
-      models.users.addUser(newUser, (user) => {
-        const token = jwt.sign(user.toJSON(), config.secret, { expiresIn: 604800 });
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+          if(err) throw err;
+          newUser.password = hash;
+          models.user.create(newUser).then(user => {
 
-        res.status(201).json({
-          success: true,
-          token: 'JWT' + token,
-          user: {
-            id: user.id,
-            username: user.username
-          }
+            const token = jwt.sign(user.toJSON(), config.secret, { expiresIn: 604800 });
+
+            res.status(201).json({
+              success: true,
+              token: 'JWT' + token,
+              user: {
+                id: user.id,
+                username: user.username
+              }
+            });
+          });
         });
       });
-
     }
     else {
       return res.status(400).send('UserAlreadyExists');
     }
   }).catch((err) => {
+    throw err;
     return res.status(500).send('Error');
   });
 });
@@ -112,9 +120,9 @@ router.post('/authenticate', (req, res, next) => {
   const password = req.body.password;
 
   /// look for username
-  models.users.findOne({ 
+  models.user.findOne({ 
     where: { username: username }, 
-    attributes: ['id', 'username', 'firstname', 'lastname', 'email', 'password', 'role']
+    attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'password', 'role']
   }).then((user) => {
     if(!user) {
       return res.status(404).send('UserNotFound');
@@ -126,7 +134,7 @@ router.post('/authenticate', (req, res, next) => {
       return res.status(400).send('IncompleteUserObject');
 
     /// validate hashed password
-    models.users.comparePassword(password, user.password, (isMatch) => {
+    bcrypt.compare(password, user.password, (err, isMatch) => {
       if(isMatch) {
         const token = jwt.sign(user.toJSON(), config.secret, { expiresIn: 604800 });
 
@@ -136,8 +144,8 @@ router.post('/authenticate', (req, res, next) => {
           user: {
             id: user.id,
             username: user.username,
-            firstname: user.firstname,
-            lastname: user.lastname,
+            firstName: user.firstName,
+            lastName: user.lastName,
             email: user.email,
             role: user.role
           }
@@ -148,7 +156,7 @@ router.post('/authenticate', (req, res, next) => {
       }
     });
   }).catch((err) => {
-    //throw err;
+    throw err;
     return res.status(500).send('Error'); 
   });
 });

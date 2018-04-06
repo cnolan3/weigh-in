@@ -29,7 +29,7 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'topics',
+          model: 'users',
           key: 'id'
         },
       }

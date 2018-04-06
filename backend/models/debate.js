@@ -6,9 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   debate.associate = function(models) {
     debate.hasMany(models.vote);
-    debate.hasMany(models.main_comment);
-//    debate.hasMany(models.side_comment);
-//    debate.belongsTo(models.user);
+    debate.belongsTo(models.user, { as: 'author' });
   };
   return debate;
 };

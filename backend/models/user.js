@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   user.associate = function(models) {
     user.belongsToMany(models.topic, { through: models.cert_list, constraints: false });
-    user.hasMany(models.debate);
   };
   return user;
 };
