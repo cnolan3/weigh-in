@@ -20,15 +20,14 @@ const config = require(__dirname + '/../config/config.json')[env];
  * in the database if the username is not already taken.
  *
  * @apiParam {String} username  new users username
- * @apiParam {String} firstname new users first name
- * @apiParam {String} lastname  new users last name
+ * @apiParam {String} firstName new users first name
+ * @apiParam {String} lastName  new users last name
  * @apiParam {String} email     new users email
  * @apiParam {String} password  new users password
  *
  * @apiSuccess (201) {Boolean} success       success status of registration
  * @apiSuccess (201) {String}  token         user authentication token
  * @apiSuccess (201) {Object}  user          user data
- * @apiSuccess (201) {Number}  user.id       user database id
  * @apiSuccess (201) {String}  user.username username
  *
  * @apiError (400) IncompleteUserObject the user data that whas sent is incomplete
@@ -38,8 +37,7 @@ const config = require(__dirname + '/../config/config.json')[env];
 router.post('/register', (req, res, next) => {
   /// check of the username already exists
   models.user.findOne({
-    where: { username: req.body.username },
-    attributes: ['id'],
+    where: { username: req.body.username }
   }).then((user) => {
     if(!user) {
       /// check for complete info
@@ -61,23 +59,16 @@ router.post('/register', (req, res, next) => {
       }
       
       /// add new user
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(newUser.password, salt, (err, hash) => {
-          if(err) throw err;
-          newUser.password = hash;
-          models.user.create(newUser).then(user => {
+      models.user.create(newUser).then(user => {
 
-            const token = jwt.sign(user.toJSON(), config.secret, { expiresIn: 604800 });
+        const token = jwt.sign(user.toJSON(), config.secret, { expiresIn: 604800 });
 
-            res.status(201).json({
-              success: true,
-              token: 'JWT' + token,
-              user: {
-                id: user.id,
-                username: user.username
-              }
-            });
-          });
+        res.status(201).json({
+          success: true,
+          token: 'JWT ' + token,
+          user: {
+            username: user.username
+          }
         });
       });
     }
@@ -106,7 +97,6 @@ router.post('/register', (req, res, next) => {
  * @apiSuccess {Boolean} success       success status of response
  * @apiSuccess {String}  token         authentication token
  * @apiSuccess {Object}  user          user data
- * @apiSuccess {Number}  user.id       user database id
  * @apiSuccess {String}  user.username username
  * @apiSuccess {String}  user.role     user role
  *
@@ -122,7 +112,8 @@ router.post('/authenticate', (req, res, next) => {
   /// look for username
   models.user.findOne({ 
     where: { username: username }, 
-    attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'password', 'role']
+    attributes: ['username', 'firstName', 'lastName', 'email', 'password', 'role'],
+    raw: true
   }).then((user) => {
     if(!user) {
       return res.status(404).send('UserNotFound');
@@ -136,13 +127,12 @@ router.post('/authenticate', (req, res, next) => {
     /// validate hashed password
     bcrypt.compare(password, user.password, (err, isMatch) => {
       if(isMatch) {
-        const token = jwt.sign(user.toJSON(), config.secret, { expiresIn: 604800 });
+        const token = jwt.sign(user, config.secret, { expiresIn: 604800 });
 
         res.status(200).json({
           success: true,
-          token: 'JWT' + token,
+          token: 'JWT ' + token,
           user: {
-            id: user.id,
             username: user.username,
             firstName: user.firstName,
             lastName: user.lastName,
@@ -203,7 +193,7 @@ router.get('/usertype', (req, res, next) => {
             if(user[0])
               return res.status(200).json({ type: user[0].cert_list.type });
             else
-              return res.status(200).json({ type: 'basic' });
+              return res.status(200).json({ type: 0 });
           }
           else
             return res.status(404).send('UserNotFound');

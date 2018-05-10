@@ -1,15 +1,16 @@
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-const User = require('../models/user');
-//const config = require('../config/database').get(process.env.NODE_ENV);
+const models = require('../models');
+const env = process.env.NODE_ENV || 'development';
+const config = require(__dirname + '/../config/config.json')[env];
 
 module.exports = function(passport) {
     let opts = {};
     opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt");
-    opts.secretOrKey = "the wind of the second era";
+    opts.secretOrKey = config.secret;
     passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
         try {
-            User.findOne({where : {username: jwt_payload.username}}).then((user) => {
+            models.user.findOne({where : {id: jwt_payload.id}}).then((user) => {
                 if(user) {
                     return done(null, user);
                 } else {
@@ -17,7 +18,9 @@ module.exports = function(passport) {
                 }
             });
         } catch(e) {
+            throw e;
             return done(null, e);
         }
     }));
 }
+

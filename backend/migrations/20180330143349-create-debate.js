@@ -14,6 +14,10 @@ module.exports = {
       description: {
         type: Sequelize.STRING
       },
+      minUserType: {
+        type: Sequelize.INTEGER,
+        defaultValue: 1
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

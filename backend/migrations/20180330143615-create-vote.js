@@ -8,8 +8,8 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      yes_no: {
-        type: Sequelize.BOOLEAN
+      vote: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

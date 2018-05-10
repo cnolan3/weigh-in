@@ -27,13 +27,15 @@ module.exports = {
         },
       },
       userId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
+        /*
         refrences: {
           model: 'users',
           key: 'id'
         },
+        */
       }
-    });
+    })
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable('main_comments');
