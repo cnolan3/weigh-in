@@ -10,7 +10,7 @@ module.exports = function(passport) {
     opts.secretOrKey = config.secret;
     passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
         try {
-            models.user.findOne({where : {id: jwt_payload.id}}).then((user) => {
+            models.user.findOne({where : {username: jwt_payload.username}}).then((user) => {
                 if(user) {
                     return done(null, user);
                 } else {

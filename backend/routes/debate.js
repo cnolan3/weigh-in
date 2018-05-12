@@ -18,7 +18,6 @@ const config = require(__dirname + '/../config/config.json')[env];
  *
  * @apiParam {String}   title       new debate title
  * @apiParam {String}   description new debate description
- * @apiParam {String}   author      author username
  * @apiParam {String}   topic       topic name for new debate
  * @apiParam {Number}   minUserType minimum user certification to main comment
  * @apiParam {Number}   ballotSize  number of ballot entries
@@ -26,9 +25,9 @@ const config = require(__dirname + '/../config/config.json')[env];
  * @apiParam {Number}   ballot.vote vote type
  * @apiParam {String}   ballot.name vote type name
 **/
-router.post('/post', (req, res, next) => {
+router.post('/post', passport.authenticate('jwt', { session: false }), (req, res, next) => {
   models.user.findOne({
-    where: { username: req.body.author }
+    where: { username: req.user.username }
   }).then(user => {
     if(user) {
 
@@ -41,27 +40,34 @@ router.post('/post', (req, res, next) => {
           let newDebate = {
             title: req.body.title,
             description: req.body.description,
-            authorUsername: req.body.author,
-            topicName: req.body.topic,
+            authorUsername: req.user.username,
+            topicName: topic.name,
             minUserType: req.body.minUserType
           }
 
-          models.debate.create(newDebate/*, { skip: ['id'] }*/).then(debate => {
+          models.debate.create(newDebate).then(debate => {
             req.body.ballot.forEach(ballot => {
               let newBallot = {
                 vote: ballot.vote,
                 name: ballot.name,
               }
 
-              debate.createBallot(newBallot).catch(err => {
-                console.log("gggg");
+              debate.createBallot(newBallot).then(ballot => {
+              }).catch(err => {
+
                 throw err;
               });
 
             });
 
+            res.status(201).json({
+              success: true,
+              debateId: debate.id,
+              author: debate.authorUsername,
+              topic: debate.topicName
+            });
+
           }).catch(err => {
-            console.log("aaaa");
             throw err;
             res.status(500).send('Error');
           });
@@ -72,7 +78,6 @@ router.post('/post', (req, res, next) => {
         }
 
       }).catch(err => {
-        console.log("bbbb");
         throw err;
         res.status(500).send('Error');
       });
@@ -83,8 +88,116 @@ router.post('/post', (req, res, next) => {
     }
 
   }).catch(err => {
-    console.log("ddddd");
     res.status(500).send('Error');
+  });
+});
+
+/**
+ * @api {post} /debates/vote
+ * @apiName vote
+ * @apiGroup debates
+ *
+ * @apiDescription submit a vote on a debate
+ *
+ * @apiParam {Number} debateId id of debate to vote on
+ * @apiParam {Number} vote     vote value
+ *
+ * @apiSuccess {Boolean} success flag
+ * @apiSuceess {String}  msg     indicate sent or updated vote
+ *
+ * @apiError (404) DebateNotFound requested debate does not exist
+ * @apiError (500) Error          database error
+**/
+router.post('/vote', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  models.debate.findById(req.body.debateId).then(debate => {
+    if(debate) {
+
+      debate.getVote({
+        where: { userUsername: req.user.username }
+      }).then(vote => {
+        if(vote) {
+          models.vote.update({
+            vote: req.body.vote
+          }, {
+            where: { debateId: debate.id, userUsername: req.user.username }
+          }).then(data => {
+            res.status(201).json({ success: true, msg: "sent" });
+          }).catch(err => {
+            res.status(500).send("Error");
+          });
+        }
+        else {
+          let newVote = {
+            vote: req.body.vote,
+            debateId: debate.id,
+            userUsername: req.user.username
+          }
+
+          debate.createVote(newVote).then(data => {
+            res.status(201).json({ success: true, msg: "updated" });
+          }).catch(err => {
+            res.status(500).send("Error");
+          });
+        }
+      }).catch(err => {
+        res.status(500).send("Error");
+      });
+    }
+    else {
+      res.status(404).send("DebateNotFound");
+    }
+  }).catch(err => {
+    res.status(500).send("Error");
+    throw err;
+  });
+});
+
+/**
+ * @api {get} /debates/results?debateId get current vote results
+ * @apiName results
+ * @apiGroup debates
+ *
+ * @apiDescription get the current vote results
+ *
+ * @apiParam {Number} debateId id of debate
+ *
+**/
+router.get('/results', (req, res, next) => {
+  models.debate.findOne({
+    where: { id: req.query.debateId }
+  }).then(debate => {
+    if(debate) {   
+      models.ballot.findAll({
+        attributes: ['vote', 'name'],
+        where: { debateId: debate.id },
+        order: [['vote', 'ASC']]
+      }).then(ballot => {
+
+        models.vote.findAll({
+          attributes: [[sequelize.cast(sequelize.fn('COUNT', sequelize.col('id')), 'integer'), 'count'], 'vote'],
+          where: { debateId: debate.id },
+          group: ['vote'],
+          order: [['vote', 'ASC']]
+        }).then(data => {
+
+          res.status(200).json({ votes: data, ballot: ballot });
+
+        }).catch(err => {
+          throw err;
+          res.status(500).send("Error");
+        });
+
+      }).catch(err => {
+        throw err;
+        res.status(500).send("Error");
+      });
+    }
+    else {
+      res.status(404).send("DebateNotFount");
+    }
+  }).catch(err => {
+    throw err;
+    res.status(500).send("Error");
   });
 });
 
@@ -177,7 +290,8 @@ router.get('/', (req, res, next) => {
     where: { title: { $like: '%' + req.query.title + '%' } },
     attributes: ['id', 'title', 'description', ['authorUsername', 'author'], ['topicName', 'topic']],
     limit: req.query.num,
-    offset: req.query.off
+    offset: req.query.off,
+    order: [['createdAt', 'DESC']]
   }).then(debates => {
     res.status(200).json({ count: debates.count, debates: debates.rows });
   }).catch(err => {
@@ -239,7 +353,6 @@ router.get('/authorof', (req, res, next) => {
  * @apiDescription add a main comment to a debate
  *
  * @apiParam {Number} debateId debate id
- * @apiParam {String} user     username
  * @apiParam {String} text     comment text
  *
  * @apiSuccess (201) {Boolean} success success flag
@@ -260,19 +373,19 @@ router.post('/comment', passport.authenticate('jwt', { session: false }), (req, 
 
       // find user
       models.user.findOne({
-        where: { username: req.body.username }
+        where: { username: req.user.username }
       }).then(user => {
 
         if(user) {
           
           models.cert_list.findOne({
-            where: { userUsername: user.username, topicName: debate.topic },
+            where: { userUsername: user.username, topicName: debate.topicName },
           }).then(cert => {
 
-            if(cert && cert.type >= debate.minUserType) {
+            if(user.username == debate.authorUsername || (cert && cert.type >= debate.minUserType)) {
               let newComm = {
                 debateId: req.body.debateId,
-                userUsername: req.body.username,
+                userUsername: user.username,
                 text: req.body.text
               }
 
@@ -334,7 +447,7 @@ router.post('/comment', passport.authenticate('jwt', { session: false }), (req, 
  *
  * @apiError (500) Error database error
 **/
-router.get('/getmcomments', (req, res, next) => {
+router.get('/getcomments', (req, res, next) => {
   let debateId = req.query.debateId;
   let num = req.query.num;
   let off = req.query.off;
@@ -343,7 +456,8 @@ router.get('/getmcomments', (req, res, next) => {
     where: { debateId: debateId },
     attributes: ['id', 'text', ['userUsername', 'user']],
     limit: num,
-    offset: off
+    offset: off,
+    order: [['createdAt', 'ASC']]
   }).then(coms => {
     return res.status(200).json({ count: coms.count, comments: coms.rows });
   }).catch(err => {

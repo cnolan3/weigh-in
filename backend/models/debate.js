@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   debate.associate = function(models) {
     debate.hasMany(models.vote, { constraints: false });
-    debate.hasMany(models.ballot, { constraints: false });
+    debate.hasMany(models.ballot);
     debate.belongsTo(models.user, { as: 'author', constraints: false });
   };
   return debate;

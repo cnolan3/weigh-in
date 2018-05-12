@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
   vote.associate = function(models) {
+    vote.belongsTo(models.user);
   };
   return vote;
 };
