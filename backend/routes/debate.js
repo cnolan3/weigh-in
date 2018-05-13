@@ -112,16 +112,16 @@ router.post('/vote', passport.authenticate('jwt', { session: false }), (req, res
   models.debate.findById(req.body.debateId).then(debate => {
     if(debate) {
 
-      debate.getVote({
+      debate.getVotes({
         where: { userUsername: req.user.username }
       }).then(vote => {
-        if(vote) {
+        if(vote[0]) {
           models.vote.update({
             vote: req.body.vote
           }, {
             where: { debateId: debate.id, userUsername: req.user.username }
           }).then(data => {
-            res.status(201).json({ success: true, msg: "sent" });
+            res.status(201).json({ success: true, msg: "update" });
           }).catch(err => {
             res.status(500).send("Error");
           });
@@ -134,7 +134,7 @@ router.post('/vote', passport.authenticate('jwt', { session: false }), (req, res
           }
 
           debate.createVote(newVote).then(data => {
-            res.status(201).json({ success: true, msg: "updated" });
+            res.status(201).json({ success: true, msg: "sent" });
           }).catch(err => {
             res.status(500).send("Error");
           });
@@ -202,65 +202,31 @@ router.get('/results', (req, res, next) => {
 });
 
 /**
- * @api {get} /debates/getvotes?debateId get all votes on a debate
- * @apiName getVotes
+ * @api {get} /debates/popular?num
+ * @apiName todaysPopular
  * @apiGroup debates
  *
- * @apiDescription return all votes on a debate and stats on them
+ * @apiDescription get today's most popular debates
  *
- * @apiParam {Number} debateId id of debate
+ * @apiParam {Number} num number of debates to get
  *
- * @apiSuccess {Number}   totalCount      total number of votes
- * @apiSuccess {Object[]} stats           array of vote stats, one entry for each vote type, ascending order by vote type
- * @apiSuccess {Number}   stats.count     count of votes for one vote type
- * @apiSuccess {Number}   stats.vote      vote type
- * @apiSuccess {Object[]} votes           array of votes, descending order by timestamp
- * @apiSuccess {Number}   votes.vote      vote type
- * @apiSuceess {Date}     votes.createdAt timestamp of vote
- * @apiSuccess {Object[]} ballot          array of ballot entries
- * @apiSuccess {Number}   ballot.vote     vote type
- * @apiSuccess {String}   ballot.name     vote type name
- *
- * @apiError (500) Error database error
+ * 
 **/
-router.get('/getvotes', (req, res, next) => {
-  models.vote.findAndCountAll({
-    attributes: ['vote', 'createdAt'],
-    where: { debateId: req.query.debateId },
-    order: [['createdAt', 'DESC']]
-  }).then(allVotes => {
+router.get('/popular', (req, res, next) => {
+  var d = new Date();
+  d.setDate(d.getDate() - 1);
 
-    models.vote.findAll({
-      attributes: [[sequelize.cast(sequelize.fn('count', sequelize.col('id')), 'integer'), 'count'], 'vote'],
-      where: { debateId: req.query.debateId },
-      group: ['vote'],
-      order: [['vote', 'ASC']]
-    }).then(voteData => {
-
-      models.ballot.findAll({
-        attributes: ['vote', 'name'],
-        where: { debateId: req.query.debateId },
-        order: [['vote', 'ASC']]
-      }).then(ballots => {
-        res.status(200).json({ 
-          totalCount: allVotes.count,
-          stats: voteData,
-          votes: allVotes.rows,
-          ballot: ballots
-        });
-      }).catch(err => {
-        throw err;
-        res.status(500).send('Error');
-      });
-
-    }).catch(err => {
-      throw err;
-      res.status(500).send('Error');
-    });
-
+  models.vote.findAll({
+    attributes: [[sequelize.fn('COUNT', sequelize.col('vote.id')), 'count']],
+    where: { updatedAt: { $gt: d } },
+    group: ['debate.id'],
+    order: [['count', 'DESC']],
+    limit: req.query.num,
+    include: [models.debate]
+  }).then(data => {
+    res.status(200).json(data);
   }).catch(err => {
-    throw err;
-    res.status(500).send('Error');
+    res.status(500).send("Error");
   });
 });
 

@@ -1,0 +1,49 @@
+.cover {
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url(../../../assets/aerial-background-beverage-1038674.jpg) center;
+  background-size: cover;
+}
+
+.jumbo {
+  background: transparent;
+  height: 350px;
+}
+
+.search {
+  background: white;
+}
+
+h1 {
+  font-size: 2.3rem;
+}
+
+p {
+  font-size: 1.1rem;
+}
+
+@media (min-width: 544px) {
+  .jumbo {
+    height: 400px;
+  }
+
+  h1 {
+    font-size: 2.8rem;
+  }
+
+  p {
+    font-size: 1.2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .jumbo {
+    height: 500px;
+  }
+
+  h1 {
+    font-size: 2.8rem;
+  }
+
+  p {
+    font-size: 1.2rem;
+  }
+}
