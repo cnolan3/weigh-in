@@ -1,6 +1,8 @@
 .cover {
   background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url(../../../assets/aerial-background-beverage-1038674.jpg) center;
   background-size: cover;
+  background-attachment: fixed;
+  background-position: center bottom;
 }
 
 .jumbo {

@@ -1,20 +1,84 @@
-<div class="cover">
-  <app-menu></app-menu>
-  <div class="container-fluid">
-    <div class="jumbotron jumbotron-fluid jumbo row justify-content-end">
-      <div class="col-sm-6 col-md-4 mr-sm-2 mr-md-5">
-        <div class="container text-right text-white">
-          <h1 class="display-4">Give Your Opinion</h1>
-          <p class="lead">Weigh-In gives you the chance to make a difference in a debate, vote on what you're passionate about and tip the scales.</p>
-        </div>
+<div class="container-fluid cover">
+
+  <!-- navbar open button -->
+  <nav class="navbar navbar-dark navbar-trans navbar-inverse">
+    <button class="ml-auto navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </nav>
+
+
+	<!-- adapted from examples on getbootstrap.com -->
+  <div class="jumbotron jumbotron-fluid jumbo row justify-content-end">
+    <div class="col-sm-6 col-md-4 mr-sm-2 mr-md-5">
+      <div class="container text-right text-white">
+        <h1 class="display-4">Give Your Opinion</h1>
+        <p class="lead">Weigh-In gives you the chance to make a difference in a debate, vote on what you're passionate about and tip the scales.</p>
       </div>
     </div>
-    <div class="row search pt-4">
-      <div class="col-6">
-        <p>Today's Most Popular</p>
-      </div>
-      <div class="col-6">
-        <p>Latest</p>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row search py-md-1 justify-content-center">
+  <!-- adapted from examples on getbootstrap.com -->
+    <div class="col-md-9">
+        <div class="card text-center">
+          <div class="card-header">
+            <ul class="nav nav-pills flex-column flex-sm-row card-header-pills justify-content-center" id="myTab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="featured-tab" data-toggle="tab" href="#featured" role="tab" aria-controls="home" aria-selected="true">Featured</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="popular-tab" data-toggle="tab" href="#popular" role="tab" aria-controls="profile" aria-selected="false">Popular</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="latest-tab" data-toggle="tab" href="#latest" role="tab" aria-controls="contact" aria-selected="false">Latest</a>
+              </li>
+            </ul>
+          </div>
+          <div class="card-body">
+            <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="featured" role="tabpanel" aria-labelledby="featured-tab">
+
+                <p>Featured Debates</p>
+
+              </div>
+              <div class="tab-pane fade" id="popular" role="tabpanel" aria-labelledby="popular-tab">
+
+                <p>Today's Most Popular</p>
+								<div class="list-group list-group-flush">
+									<div *ngFor="let debate of pop">
+										<a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+											<div class="d-flex w-100 justify-content-between">
+												<h5 class="mb-1">{{ debate.debate.title }}</h5>
+												<small>3 days ago</small>
+											</div>
+											<p class="mb-1">{{ debate.debate.description }}</p>
+											<small>{{ debate.debate.topicName }}</small>
+										</a>
+									</div>
+							  </div>
+
+              </div>
+              <div class="tab-pane fade" id="latest" role="tabpanel" aria-labelledby="latest-tab">
+
+                <p>Most Recently Posted</p>
+								<div class="list-group list-group-flush">
+									<div *ngFor="let debate of lat">
+										<a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+											<div class="d-flex w-100 justify-content-between">
+												<h5 class="mb-1">{{ debate.title }}</h5>
+												<small>3 days ago</small>
+											</div>
+											<p class="mb-1">{{ debate.description }}</p>
+											<small>{{ debate.topicName }}</small>
+										</a>
+									</div>
+								</div>
+
+              </div>
+            </div>
+          </div>
       </div>
     </div>
   </div>

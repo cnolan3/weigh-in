@@ -8,12 +8,18 @@ import { DataService } from '../../services/dataService/data.service';
 })
 export class HomepageComponent implements OnInit {
   pop: any;
+  lat: any;
 
   constructor(private dataService: DataService) { }
 
   ngOnInit() {
-    this.dataService.getPopular(1).subscribe(data => {
+    this.dataService.getPopular(3).subscribe(data => {
       this.pop = data;
+    });
+
+    this.dataService.getLatest(3).subscribe(data => {
+      this.lat = data;
+      console.log(data);
     });
   }
 

@@ -93,6 +93,30 @@ router.post('/post', passport.authenticate('jwt', { session: false }), (req, res
 });
 
 /**
+ * @api {get} /debates/latest?num
+ * @apiNum latest
+ * @apiGroup debates
+ *
+ * @apiDescription get num latest debates
+ *
+ * @apiParam {Number} num amount to get
+ *
+ * @apiError (500) Error database error
+**/
+router.get('/latest', (req, res, next) => {
+  console.log(req.query.num);
+
+  models.debate.findAll({
+    order: [['createdAt', 'DESC']],
+    limit: req.query.num
+  }).then(debates => {
+    res.status(200).json(debates);
+  }).catch(err => {
+    res.status(500).send("Error");
+  });
+});
+
+/**
  * @api {post} /debates/vote
  * @apiName vote
  * @apiGroup debates

@@ -15,9 +15,9 @@ export class DataService {
    * post a new debate
   **/
   postDebate(debate) {
-    const headers = new HttpHeaders();
-    headers.set('Content-Type', 'application/json');
-    headers.set('Authorization', this.authService.getToken());
+    const headers = new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('Authorization', this.authService.getToken());
     return this.http.post(environment.apiUrl + '/debates/post', debate, {headers: headers});
   }
 
@@ -25,8 +25,17 @@ export class DataService {
    * get today's most popular debates
   **/
   getPopular(num) {
-    const headers = new HttpHeaders();
-    headers.set('Content-Type', 'application/json');
-    return this.http.get(environment.apiUrl + '/debates/popular?num=' + num, {headers: headers});
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    const params = new HttpParams().set('num', num);
+    return this.http.get(environment.apiUrl + '/debates/popular', {headers: headers, params: params});
+  }
+
+  /**
+   * get latest debates
+  **/
+  getLatest(num) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    const params = new HttpParams().set('num', num);
+    return this.http.get(environment.apiUrl + '/debates/latest', {params: params, headers: headers});
   }
 }
