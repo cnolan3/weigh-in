@@ -1,0 +1,44 @@
+<div class="container">
+  <form (submit)="onSubmitBtn()">
+    <div class="row justify-content-center mt-4">
+
+      <div class="col-md-6">
+        
+        <h1>Post a new debate</h1>
+        <div class="form-group justify-content-center">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="titleIcon">
+                Title
+              </span>
+            </div>
+            <input type="text" [(ngModel)]="title" name="title" class="form-control" placeholder="Title" aria-label="Title" aria-describedby="titleIcon">
+          </div>
+
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Description</span>
+            </div>
+            <textarea class="form-control" [(ngModel)]="description" name="description" aria-label="With textarea"></textarea>
+          </div>
+
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<label class="input-group-text" for="inputGroupSelect01">Category</label>
+						</div>
+						<select class="custom-select" [(ngModel)]="category" name="category" id="inputGroupSelect01">
+							<option selected>Choose...</option>
+							<option *ngFor="let cat of categories" [value]="cat.name">{{ cat.name }}</option>
+						</select>
+					</div>
+
+				</div>
+
+        <div class="row justify-content-center">
+          <input type="submit" class="btn btn-info btn-block mx-3" value="submit">
+        </div>
+      </div>
+
+    </div>
+  </form>
+</div>

@@ -19,6 +19,11 @@ import { SearchpageComponent } from './components/searchpage/searchpage.componen
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { DebateComponent } from './components/debate/debate.component';
+import { PostComponent } from './components/post/post.component';
+import { ProfileComponent } from './components/profile/profile.component';
+
+
+import { AuthGuard } from './guards/auth.guard';
 
 
 const appRoutes: Routes = [
@@ -26,7 +31,9 @@ const appRoutes: Routes = [
   {path:'search',component:SearchpageComponent},
   {path:'register',component:RegisterComponent},
   {path:'login',component:LoginComponent},
-  {path:'debate/:id',component:DebateComponent} 
+  {path:'debate/:id',component:DebateComponent},
+  {path:'post',component:PostComponent,canActivate:[AuthGuard]},
+  {path:'profile',component:ProfileComponent,canActivate:[AuthGuard]}
 ]
 
 export function fact() {
@@ -42,7 +49,9 @@ export function fact() {
     SearchpageComponent,
     RegisterComponent,
     LoginComponent,
-    DebateComponent
+    DebateComponent,
+    PostComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -58,6 +67,7 @@ export function fact() {
   ],
   providers: [
     AuthService,
+    AuthGuard,
     DataService
   ],
   bootstrap: [AppComponent]

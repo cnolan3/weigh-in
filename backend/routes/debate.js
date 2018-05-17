@@ -26,6 +26,7 @@ const config = require(__dirname + '/../config/config.json')[env];
  * @apiParam {String}   ballot.name vote type name
 **/
 router.post('/post', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  console.log(req.body);
   models.user.findOne({
     where: { username: req.user.username }
   }).then(user => {
@@ -89,6 +90,24 @@ router.post('/post', passport.authenticate('jwt', { session: false }), (req, res
 
   }).catch(err => {
     res.status(500).send('Error');
+  });
+});
+
+/**
+ * @api {get} /debates/topics
+**/
+router.get('/topics', (req, res, next) => {
+  models.topic.findAll({
+    order: [['name', 'ASC']]
+  }).then(topics => {
+    if(topics) {
+      res.status(200).json(topics);
+    }
+    else {
+      res.status(404).send("TopicsNotFound");
+    }
+  }).catch(err => {
+    res.status(500).send("Error");
   });
 });
 
@@ -333,6 +352,7 @@ router.get('/popular', (req, res, next) => {
  * @apiError (500) Error database error
 **/
 router.get('/', (req, res, next) => {
+  console.log(req.query.title);
   models.debate.findAndCountAll({
     where: { title: { $like: '%' + req.query.title + '%' } },
     attributes: ['id', 'title', 'description', ['authorUsername', 'author'], ['topicName', 'topic']],
@@ -344,6 +364,23 @@ router.get('/', (req, res, next) => {
   }).catch(err => {
     throw err;
     res.status(500).send('Error');
+  });
+});
+
+/**
+ * @api {get} /debates/debate?id get a debate by id
+**/
+router.get('/debate', (req, res, next) => {
+  models.debate.findById(req.query.id).then(debate => {
+    if(debate) {
+      res.status(200).json(debate);
+    }
+    else {
+      res.status(404).send("DebateNotFound");
+    }
+
+  }).catch(err => {
+    res.status(500).send("Error");
   });
 });
 

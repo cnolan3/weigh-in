@@ -33,43 +33,38 @@
               <div class="tab-pane fade show active" id="featured" role="tabpanel" aria-labelledby="featured-tab">
 
                 <p>Featured Debates</p>
-								<div class="list-group list-group-flush">
-									<div *ngFor="let debate of fea">
-										<a class="list-group-item list-group-item-action flex-column align-items-start" [routerLink]="['/debate', debate.debate.id]">
-											<div class="d-flex w-100 justify-content-between">
-												<h5 class="mb-1">{{ debate.debate.title }}</h5>
-												<small>{{ debate.debate.topicName }}</small>
-											</div>
-											<p class="mb-1">{{ debate.debate.description }}</p>
-											<small>{{ debate.debate.authorUsername }}</small>
-										</a>
-									</div>
+								<div class="list-group">
+                  <a *ngFor="let debate of fea" class="list-group-item list-group-item-action flex-column align-items-start" [routerLink]="['/debate', debate.debate.id]">
+                    <div class="d-flex w-100 justify-content-between">
+                      <h5 class="mb-1">{{ debate.debate.title }}</h5>
+                      <small>{{ debate.debate.topicName }}</small>
+                    </div>
+                    <p class="mb-1">{{ debate.debate.description }}</p>
+                    <small>{{ debate.debate.authorUsername }}</small>
+                  </a>
 							  </div>
 
               </div>
               <div class="tab-pane fade" id="popular" role="tabpanel" aria-labelledby="popular-tab">
 
                 <p>Today's Most Popular</p>
-								<div class="list-group list-group-flush">
-									<div *ngFor="let debate of pop">
-										<a class="list-group-item list-group-item-action flex-column align-items-start" [routerLink]="['/debate', debate.debate.id]">
-											<div class="d-flex w-100 justify-content-between">
-												<h5 class="mb-1">{{ debate.debate.title }}</h5>
-												<small>{{ debate.debate.topicName }}</small>
-											</div>
-											<p class="mb-1">{{ debate.debate.description }}</p>
-											<small>{{ debate.debate.authorUsername }}</small>
-										</a>
-									</div>
+								<div class="list-group">
+                  <a *ngFor="let debate of pop" class="list-group-item list-group-item-action flex-column align-items-start" [routerLink]="['/debate', debate.debate.id]">
+                    <div class="d-flex w-100 justify-content-between">
+                      <h5 class="mb-1">{{ debate.debate.title }}</h5>
+                      <small>{{ debate.debate.topicName }}</small>
+                    </div>
+                    <p class="mb-1">{{ debate.debate.description }}</p>
+                    <small>{{ debate.debate.authorUsername }}</small>
+                  </a>
 							  </div>
 
               </div>
               <div class="tab-pane fade" id="latest" role="tabpanel" aria-labelledby="latest-tab">
 
                 <p>Most Recently Posted</p>
-								<div class="list-group list-group-flush">
-									<div *ngFor="let debate of lat">
-										<a class="list-group-item list-group-item-action flex-column align-items-start" [routerLink]="['/debate', debate.id]">
+								<div class="list-group">
+										<a *ngFor="let debate of lat" class="list-group-item list-group-item-action flex-column align-items-start" [routerLink]="['/debate', debate.id]">
 											<div class="d-flex w-100 justify-content-between">
 												<h5 class="mb-1">{{ debate.title }}</h5>
 												<small>{{ debate.topicName }}</small>
@@ -77,7 +72,6 @@
 											<p class="mb-1">{{ debate.description }}</p>
 											<small>{{ debate.authorUsername }}</small>
 										</a>
-									</div>
 								</div>
 
               </div>

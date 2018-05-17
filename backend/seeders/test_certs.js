@@ -3,9 +3,9 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert('cert_lists', [
-      { type: 1, topicName: 'topic_A', userUsername: 'aaa' },
-      { type: 2, topicName: 'topic_B', userUsername: 'aaa' },
-      { type: 2, topicName: 'topic_B', userUsername: 'bbb' }
+      { type: 1, topicName: 'cooking', userUsername: 'aaa' },
+      { type: 2, topicName: 'T.V.', userUsername: 'aaa' },
+      { type: 2, topicName: 'T.V.', userUsername: 'bbb' }
     ], {});
   },
 
