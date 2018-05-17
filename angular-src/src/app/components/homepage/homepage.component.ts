@@ -9,6 +9,7 @@ import { DataService } from '../../services/dataService/data.service';
 export class HomepageComponent implements OnInit {
   pop: any;
   lat: any;
+  fea: any;
 
   constructor(private dataService: DataService) { }
 
@@ -19,7 +20,10 @@ export class HomepageComponent implements OnInit {
 
     this.dataService.getLatest(3).subscribe(data => {
       this.lat = data;
-      console.log(data);
+    });
+
+    this.dataService.getFeatured().subscribe(data => {
+      this.fea = data;
     });
   }
 

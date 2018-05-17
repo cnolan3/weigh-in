@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
@@ -13,10 +14,19 @@ import { MenuComponent } from './components/menu/menu.component';
 
 
 import { environment } from '../environments/environment';
+import { FooterComponent } from './components/footer/footer.component';
+import { SearchpageComponent } from './components/searchpage/searchpage.component';
+import { RegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/login/login.component';
+import { DebateComponent } from './components/debate/debate.component';
 
 
 const appRoutes: Routes = [
-  {path:'',component:HomepageComponent}
+  {path:'',component:HomepageComponent},
+  {path:'search',component:SearchpageComponent},
+  {path:'register',component:RegisterComponent},
+  {path:'login',component:LoginComponent},
+  {path:'debate/:id',component:DebateComponent} 
 ]
 
 export function fact() {
@@ -27,11 +37,17 @@ export function fact() {
   declarations: [
     AppComponent,
     HomepageComponent,
-    MenuComponent
+    MenuComponent,
+    FooterComponent,
+    SearchpageComponent,
+    RegisterComponent,
+    LoginComponent,
+    DebateComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
+    FormsModule,
     RouterModule.forRoot(appRoutes),
     JwtModule.forRoot({
       config: {

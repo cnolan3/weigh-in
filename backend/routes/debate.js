@@ -94,7 +94,7 @@ router.post('/post', passport.authenticate('jwt', { session: false }), (req, res
 
 /**
  * @api {get} /debates/latest?num
- * @apiNum latest
+ * @apiName latest
  * @apiGroup debates
  *
  * @apiDescription get num latest debates
@@ -104,13 +104,70 @@ router.post('/post', passport.authenticate('jwt', { session: false }), (req, res
  * @apiError (500) Error database error
 **/
 router.get('/latest', (req, res, next) => {
-  console.log(req.query.num);
-
   models.debate.findAll({
     order: [['createdAt', 'DESC']],
     limit: req.query.num
   }).then(debates => {
     res.status(200).json(debates);
+  }).catch(err => {
+    res.status(500).send("Error");
+  });
+});
+
+/**
+ * @api {get} /debates/featured
+ * @apiName featured
+ * @apiGroup debates
+ *
+ * @apiDescription get featured debates
+ *
+ * @apiError (500) Error database error
+**/
+router.get('/featured', (req, res, next) => {
+ models.featured.findAll({
+   include: [models.debate]
+ }).then(debates => {
+   res.status(200).json(debates);
+ }).catch(err => {
+   res.status(500).send("Error");
+   throw err;
+ });
+});
+
+/**
+ * @api {post} /debates/addFeatured
+ * @apiName addFeatured
+ * @apiGroup debates
+ *
+ * @apiDescription add to featured list
+ *
+ * @apiParam {Number} debateId id of debate to add to featured list
+ *
+ * @apiSuccess {Number} debateId id of debate added
+ *
+ * @apiError (500) Error          database error
+ * @apiError (404) DebateNotFound no debate with specified id
+**/
+router.post('/addFeatured', (req, res, next) => {
+  models.debate.findOne({
+    where: { id: req.body.debateId }
+  }).then(debate => {
+    
+    if(debate) {
+      let newFeatured = {
+        debateId: debate.id
+      }
+
+      models.featured.create(newFeatured).then(f => {
+        res.status(201).json({ debateId: debate.id });
+      }).catch(err => {
+        res.status(500).send("Error");
+      });
+    }
+    else {
+      res.status(404).send("DebateNotFound");
+    }
+
   }).catch(err => {
     res.status(500).send("Error");
   });

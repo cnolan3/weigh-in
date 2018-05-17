@@ -36,6 +36,7 @@ const config = require(__dirname + '/../config/config.json')[env];
 **/
 router.post('/register', (req, res, next) => {
   /// check of the username already exists
+  console.log(req.body);
   models.user.findOne({
     where: { username: req.body.username }
   }).then((user) => {

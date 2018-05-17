@@ -2,3 +2,12 @@
 @import "../node_modules/bootswatch/dist/flatly/variables";
 @import "../node_modules/bootstrap/scss/bootstrap";
 @import "../node_modules/bootswatch/dist/flatly/bootswatch";
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 130px;
+}

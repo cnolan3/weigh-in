@@ -38,4 +38,12 @@ export class DataService {
     const params = new HttpParams().set('num', num);
     return this.http.get(environment.apiUrl + '/debates/latest', {params: params, headers: headers});
   }
+
+  /**
+   * get featured debates
+  **/
+  getFeatured() {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.get(environment.apiUrl + '/debates/featured', {headers: headers});
+  }
 }

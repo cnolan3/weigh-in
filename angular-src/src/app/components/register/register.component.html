@@ -1,0 +1,80 @@
+<div class="container">
+  <form (submit)="onSubmitBtn()">
+    <div class="row justify-content-center mt-4">
+
+      <div class="col-md-6">
+
+        <div class="form-group justify-content-center">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="firstnameIcon">
+                firstname
+              </span>
+            </div>
+            <input type="text" [(ngModel)]="firstname" name="firstname" class="form-control" placeholder="Firstname" aria-label="Firstname" aria-describedby="firstnameIcon">
+          </div>
+        </div>
+
+        <div class="form-group justify-content-center">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="lastnameIcon">
+                lastname
+              </span>
+            </div>
+            <input type="text" [(ngModel)]="lastname" name="lastname" class="form-control" placeholder="Lastname" aria-label="Lastname" aria-describedby="lastnameIcon">
+          </div>
+        </div>
+
+        <div class="form-group justify-content-center">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="emailIcon">
+                email
+              </span>
+            </div>
+            <input type="text" [(ngModel)]="email" name="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="emailIcon">
+          </div>
+        </div>
+
+        <div class="form-group justify-content-center">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="usernameIcon">
+                username
+              </span>
+            </div>
+            <input type="text" [(ngModel)]="username" name="username" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="usernameIcon">
+          </div>
+        </div>
+
+        <div class="form-group justify-content-center">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="passwordIcon">
+                password
+              </span>
+            </div>
+            <input type="text" [(ngModel)]="password" name="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="passwordIcon">
+          </div>
+        </div>
+
+        <div class="form-group justify-content-center">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="passwordConIcon">
+                confirm
+              </span>
+            </div>
+            <input type="text" [(ngModel)]="passConf" name="passConf" class="form-control" placeholder="Confirm Password" aria-label="Confirm Password" aria-describedby="passwordConIcon">
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <input type="submit" class="btn btn-info btn-block mx-3" value="submit">
+        </div>
+      </div>
+
+    </div>
+  </form>
+</div>

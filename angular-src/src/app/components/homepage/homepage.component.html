@@ -1,13 +1,5 @@
 <div class="container-fluid cover">
 
-  <!-- navbar open button -->
-  <nav class="navbar navbar-dark navbar-trans navbar-inverse">
-    <button class="ml-auto navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  </nav>
-
-
 	<!-- adapted from examples on getbootstrap.com -->
   <div class="jumbotron jumbotron-fluid jumbo row justify-content-end">
     <div class="col-sm-6 col-md-4 mr-sm-2 mr-md-5">
@@ -41,6 +33,18 @@
               <div class="tab-pane fade show active" id="featured" role="tabpanel" aria-labelledby="featured-tab">
 
                 <p>Featured Debates</p>
+								<div class="list-group list-group-flush">
+									<div *ngFor="let debate of fea">
+										<a class="list-group-item list-group-item-action flex-column align-items-start" [routerLink]="['/debate', debate.debate.id]">
+											<div class="d-flex w-100 justify-content-between">
+												<h5 class="mb-1">{{ debate.debate.title }}</h5>
+												<small>{{ debate.debate.topicName }}</small>
+											</div>
+											<p class="mb-1">{{ debate.debate.description }}</p>
+											<small>{{ debate.debate.authorUsername }}</small>
+										</a>
+									</div>
+							  </div>
 
               </div>
               <div class="tab-pane fade" id="popular" role="tabpanel" aria-labelledby="popular-tab">
@@ -48,13 +52,13 @@
                 <p>Today's Most Popular</p>
 								<div class="list-group list-group-flush">
 									<div *ngFor="let debate of pop">
-										<a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+										<a class="list-group-item list-group-item-action flex-column align-items-start" [routerLink]="['/debate', debate.debate.id]">
 											<div class="d-flex w-100 justify-content-between">
 												<h5 class="mb-1">{{ debate.debate.title }}</h5>
-												<small>3 days ago</small>
+												<small>{{ debate.debate.topicName }}</small>
 											</div>
 											<p class="mb-1">{{ debate.debate.description }}</p>
-											<small>{{ debate.debate.topicName }}</small>
+											<small>{{ debate.debate.authorUsername }}</small>
 										</a>
 									</div>
 							  </div>
@@ -65,13 +69,13 @@
                 <p>Most Recently Posted</p>
 								<div class="list-group list-group-flush">
 									<div *ngFor="let debate of lat">
-										<a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+										<a class="list-group-item list-group-item-action flex-column align-items-start" [routerLink]="['/debate', debate.id]">
 											<div class="d-flex w-100 justify-content-between">
 												<h5 class="mb-1">{{ debate.title }}</h5>
-												<small>3 days ago</small>
+												<small>{{ debate.topicName }}</small>
 											</div>
 											<p class="mb-1">{{ debate.description }}</p>
-											<small>{{ debate.topicName }}</small>
+											<small>{{ debate.authorUsername }}</small>
 										</a>
 									</div>
 								</div>

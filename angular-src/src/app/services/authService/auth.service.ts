@@ -64,7 +64,7 @@ export class AuthService {
     if(!token) {
       return false;
     }
-
+   
     return !this.jwtHelperService.isTokenExpired(token);
   }
 
@@ -72,7 +72,7 @@ export class AuthService {
     const token = localStorage.getItem('id_token');
     return token;
   }
-  
+
   /**
    * log out the current user
   **/
