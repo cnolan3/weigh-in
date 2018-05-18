@@ -5,7 +5,11 @@ module.exports = {
     return queryInterface.bulkInsert('topics', [
       { name: 'Cooking' },
       { name: 'Philosophy' },
-      { name: 'T.V.' }
+      { name: 'T.V.' },
+      { name: 'Sports' },
+      { name: 'Art' },
+      { name: 'Pets/Animals' },
+      { name: 'Misc.' }
     ], {});
   },
 

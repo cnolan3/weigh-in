@@ -32,31 +32,42 @@ const config = require(__dirname + '/../config/config.json')[env];
  *
  * @apiError (400) UsernameTooShort     username is less than 6 characters
  * @apiError (400) UsernameTooLong      username is more than 14 characters
+ * @apiError (400) PasswordTooShort     password is less than 6 characters
+ * @apiError (400) InvalidEmail         email is not valid
  * @apiError (400) IncompleteUserObject the user data that whas sent is incomplete
  * @apiError (400) UserAlreadyExits     user with requested username already exists
  * @apiError (500) Error                database error
 **/
 router.post('/register', (req, res, next) => {
   /// check if username is long enough
-  if(req.body.username.length < 6) {
+  if(req.body.username.length < 6) 
     return res.status(400).send('UsernameTooShort');
-  }
-  else if(req.body.username.length > 14) {
+  else if(req.body.username.length > 14) 
     return res.status(400).send('UsernameTooLong');
-  }
+
+  /// check if password is long enough
+  if(req.body.password.length < 6)
+    return res.status(400).send('PasswordTooShort');
+
+	/// check for email
+	/// adapted from https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	if(!re.test(String(req.body.email).toLowerCase()) 
+		return res.status(400).send('InvalidEmail');
+
+	/// check for complete info
+	if(!req.body.username ||
+		 !req.body.firstName ||
+		 !req.body.lastName ||
+		 !req.body.email ||
+		 !req.body.password)
+		return res.status(400).send('IncompleteUserObject');
 
   /// check of the username already exists
   models.user.findOne({
     where: { username: req.body.username }
   }).then((user) => {
     if(!user) {
-      /// check for complete info
-      if(!req.body.username ||
-         !req.body.firstName ||
-         !req.body.lastName ||
-         !req.body.email ||
-         !req.body.password)
-        return res.status(400).send('IncompleteUserObject');
 
       /// create new user object
       let newUser = {
