@@ -43,13 +43,15 @@ router.post('/post', passport.authenticate('jwt', { session: false }), (req, res
             description: req.body.description,
             authorUsername: req.user.username,
             topicName: topic.name,
-            minUserType: req.body.minUserType
+            minUserType: String(req.body.minUserType)
           }
+
+          console.log(newDebate);
 
           models.debate.create(newDebate).then(debate => {
             req.body.ballot.forEach(ballot => {
               let newBallot = {
-                vote: ballot.vote,
+                vote: String(ballot.vote),
                 name: ballot.name,
               }
 

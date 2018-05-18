@@ -11,7 +11,7 @@ const app = express();
 const users = require('./routes/users');
 const debates = require('./routes/debate');
 
-const port = 4000;
+const port = require('./config/port').get(process.env.NODE_ENV).port;
 
 // use cors
 app.use(cors());
