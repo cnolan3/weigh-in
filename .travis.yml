@@ -11,3 +11,5 @@ install:
 - "./scripts/install.sh"
 script:
 - "./scripts/build.sh"
+after_success:
+- "./scripts/deploy.sh"
