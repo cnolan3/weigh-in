@@ -3,8 +3,6 @@
 set -x
 if [ $TRAVIS_BRANCH == 'master' ] ; then
     # Initialize a new git repo, and push it to our server.
-	ls
-	ls angular-src
     git init
         
     git remote add deploy "deploy@weighindebates.com:/var/www/wi"
@@ -13,6 +11,7 @@ if [ $TRAVIS_BRANCH == 'master' ] ; then
     
     git add ./backend 
 	git add -f ./angular-src/dist
+	git status
     git commit -m "Deploy"
     git push --force deploy master
 else
