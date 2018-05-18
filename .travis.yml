@@ -1,14 +1,13 @@
 language: node_js
 node_js:
-    - "8"
-
+- '8'
 before_install:
-    - npm i -g npm@latest
-    - npm i -g @angular/cli
-    - chmod +x scripts/*
-
+- openssl aes-256-cbc -K $encrypted_b678dd2a4d12_key -iv $encrypted_b678dd2a4d12_iv
+  -in id_rsa.enc -out id_rsa -d
+- npm i -g npm@latest
+- npm i -g @angular/cli
+- chmod +x scripts/*
 install:
-    - "./scripts/install.sh"
-
+- "./scripts/install.sh"
 script:
-    - "./scripts/build.sh"
+- "./scripts/build.sh"
