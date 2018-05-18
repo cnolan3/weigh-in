@@ -11,7 +11,6 @@ if [ $TRAVIS_BRANCH == 'master' ] ; then
     
     git add ./backend 
 	git add -f ./angular-src/dist
-	git status
     git commit -m "Deploy"
     git push --force deploy master
 else
