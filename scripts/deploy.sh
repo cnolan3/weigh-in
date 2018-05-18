@@ -7,6 +7,7 @@ if [ $TRAVIS_BRANCH == 'master' ] ; then
 	cd deploy
 	mv ../angular-src/dist .
 	mv ../backend .
+	mv ../.gitignore .
 
     git init
         
