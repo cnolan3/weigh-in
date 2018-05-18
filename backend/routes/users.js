@@ -30,13 +30,22 @@ const config = require(__dirname + '/../config/config.json')[env];
  * @apiSuccess (201) {Object}  user          user data
  * @apiSuccess (201) {String}  user.username username
  *
+ * @apiError (400) UsernameTooShort     username is less than 6 characters
+ * @apiError (400) UsernameTooLong      username is more than 14 characters
  * @apiError (400) IncompleteUserObject the user data that whas sent is incomplete
  * @apiError (400) UserAlreadyExits     user with requested username already exists
  * @apiError (500) Error                database error
 **/
 router.post('/register', (req, res, next) => {
+  /// check if username is long enough
+  if(req.body.username.length < 6) {
+    return res.status(400).send('UsernameTooShort');
+  }
+  else if(req.body.username.length > 14) {
+    return res.status(400).send('UsernameTooLong');
+  }
+
   /// check of the username already exists
-  console.log(req.body);
   models.user.findOne({
     where: { username: req.body.username }
   }).then((user) => {

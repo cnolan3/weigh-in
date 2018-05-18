@@ -24,6 +24,15 @@ const config = require(__dirname + '/../config/config.json')[env];
  * @apiParam {Object[]} ballot      array of ballot entries
  * @apiParam {Number}   ballot.vote vote type
  * @apiParam {String}   ballot.name vote type name
+ *
+ * @apiSuccess (201) {String} success  true if successful
+ * @apiSuccess (201) {Number} debateId id of posted debate
+ * @apiSuccess (201) {String} author   username of author
+ * @apiSuccess (201) {String} topic    topic (category) of posted debate
+ *
+ * @apiError (500) Error         database error
+ * @apiError (404) TopicNotFound no topic by that name
+ * @apiError (404) UserNotFount  no user with that username
 **/
 router.post('/post', passport.authenticate('jwt', { session: false }), (req, res, next) => {
   console.log(req.body);
@@ -58,7 +67,7 @@ router.post('/post', passport.authenticate('jwt', { session: false }), (req, res
               debate.createBallot(newBallot).then(ballot => {
               }).catch(err => {
 
-                throw err;
+                res.status(500).send("Error");
               });
 
             });
@@ -96,7 +105,16 @@ router.post('/post', passport.authenticate('jwt', { session: false }), (req, res
 });
 
 /**
- * @api {get} /debates/topics
+ * @api {get} /debates/topics get all topics
+ * @apiName topics
+ * @apiGroup debates
+ *
+ * @apiDescription get all topics from database
+ * 
+ * @apiSuccess (200) {Objec[]} topics array of topic objects
+ *
+ * @apiError (404) TopicsNotFound no topics in the database
+ * @apiError (500) Error          database error
 **/
 router.get('/topics', (req, res, next) => {
   models.topic.findAll({
@@ -371,6 +389,17 @@ router.get('/', (req, res, next) => {
 
 /**
  * @api {get} /debates/debate?id get a debate by id
+ * @apiName debateById
+ * @apiGroup debates
+ *
+ * @apiDescription get a debate by its id
+ *
+ * @apiParam {Number} id id to look for
+ *
+ * @apiSuccess {Object} debate
+ *
+ * @apiError (404) DebateNotFound no debate with that id
+ * @apiError (500) Error          database error
 **/
 router.get('/debate', (req, res, next) => {
   models.debate.findById(req.query.id).then(debate => {
