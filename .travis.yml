@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+    - "8"
+
+before_install:
+    - npm i -g npm@latest
+    - npm i -g @angular/cli
+    - chmod +x scripts/*
+
+install:
+    - "./scripts/install.sh"
+
+script:
+    - "./scripts/build.sh"
