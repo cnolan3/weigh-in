@@ -9,7 +9,7 @@ if [ $TRAVIS_BRANCH == 'master' ] ; then
     git config user.name "Travis CI"
     git config user.email "connor.nolan+travisCI@gmail.com"
     
-    git add ./backend ./angular-src/dist
+    git add -f ./backend ./angular-src/dist
     git commit -m "Deploy"
     git push --force deploy master
 else
