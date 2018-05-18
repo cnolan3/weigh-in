@@ -3,8 +3,10 @@
 set -x
 if [ $TRAVIS_BRANCH == 'master' ] ; then
     # Initialize a new git repo, and push it to our server.
-	mkdir angular-build
-	mv angular-src/dist/* angular-build/
+	mkdir deploy
+	cd deploy
+	mv ../angular-src/dist .
+	mv ../backend .
 
     git init
         
@@ -12,7 +14,7 @@ if [ $TRAVIS_BRANCH == 'master' ] ; then
     git config user.name "Travis CI"
     git config user.email "connor.nolan+travisCI@gmail.com"
     
-    git add ./backend ./angular-build
+    git add .
     git commit -m "Deploy"
     git push --force deploy master
 else
