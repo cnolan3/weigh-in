@@ -12,6 +12,8 @@ before_install:
 - chmod +x scripts/*
 install:
 - "./scripts/install.sh"
+before_script:
+- echo -e "Host weighindebates.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 script:
 - "./scripts/build.sh"
 after_success:
