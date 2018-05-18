@@ -175,6 +175,7 @@ router.get('/featured', (req, res, next) => {
 
 /**
  * @api {post} /debates/addFeatured
+ * @apiPrivate
  * @apiName addFeatured
  * @apiGroup debates
  *
@@ -281,6 +282,11 @@ router.post('/vote', passport.authenticate('jwt', { session: false }), (req, res
  *
  * @apiParam {Number} debateId id of debate
  *
+ * @apiSuccess (200) {Object} votes
+ * @apiSuccess (200) {Object} ballot
+ *
+ * @apiError (500) Error          database error
+ * @apiError (404) DebateNotFound no debate with id
 **/
 router.get('/results', (req, res, next) => {
   models.debate.findOne({
