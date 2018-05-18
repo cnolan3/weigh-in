@@ -1,0 +1,12 @@
+{
+	"apps":[
+		{
+			"name":"weigh-in-server",
+			"script":"./app.js",
+			"env": {
+				"NODE_ENV": "production"
+				"PORT": "8080"
+			}
+		}
+	]
+}
