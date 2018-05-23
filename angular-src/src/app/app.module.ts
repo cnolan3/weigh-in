@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
@@ -6,6 +7,7 @@ import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { NgModule } from '@angular/core';
 import { AuthService } from './services/authService/auth.service';
 import { DataService } from './services/dataService/data.service';
+import { FlashService } from './services/flashService/flash.service';
 
 
 import { AppComponent } from './app.component';
@@ -24,6 +26,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 
 
 import { AuthGuard } from './guards/auth.guard';
+import { FlashComponent } from './components/flash/flash.component';
 
 
 const appRoutes: Routes = [
@@ -51,10 +54,12 @@ export function fact() {
     LoginComponent,
     DebateComponent,
     PostComponent,
-    ProfileComponent
+    ProfileComponent,
+    FlashComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot(appRoutes),
@@ -68,7 +73,8 @@ export function fact() {
   providers: [
     AuthService,
     AuthGuard,
-    DataService
+    DataService,
+    FlashService
   ],
   bootstrap: [AppComponent]
 })

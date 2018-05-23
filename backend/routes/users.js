@@ -39,6 +39,15 @@ const config = require(__dirname + '/../config/config.json')[env];
  * @apiError (500) Error                database error
 **/
 router.post('/register', (req, res, next) => {
+
+	/// check for complete info
+	if(!req.body.username ||
+		 !req.body.firstName ||
+		 !req.body.lastName ||
+		 !req.body.email ||
+		 !req.body.password)
+		return res.status(400).send('IncompleteUserObject');
+
   /// check if username is long enough
   if(req.body.username.length < 6) 
     return res.status(400).send('UsernameTooShort');
@@ -54,14 +63,6 @@ router.post('/register', (req, res, next) => {
 	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	if(!re.test(String(req.body.email).toLowerCase()))
 		return res.status(400).send('InvalidEmail');
-
-	/// check for complete info
-	if(!req.body.username ||
-		 !req.body.firstName ||
-		 !req.body.lastName ||
-		 !req.body.email ||
-		 !req.body.password)
-		return res.status(400).send('IncompleteUserObject');
 
   /// check of the username already exists
   models.user.findOne({
@@ -127,6 +128,12 @@ router.post('/register', (req, res, next) => {
  * @apiError (500) Error                database error
 **/
 router.post('/authenticate', (req, res, next) => {
+
+  /// check for complete user object
+  if(!req.body.username ||
+     !req.body.password)
+    return res.status(400).send('IncompleteUserObject');
+
   const username = req.body.username;
   const password = req.body.password;
 
@@ -139,11 +146,6 @@ router.post('/authenticate', (req, res, next) => {
     if(!user) {
       return res.status(404).send('UserNotFound');
     }
-
-    /// check for complete user object
-    if(!req.body.username ||
-       !req.body.password)
-      return res.status(400).send('IncompleteUserObject');
 
     /// validate hashed password
     bcrypt.compare(password, user.password, (err, isMatch) => {

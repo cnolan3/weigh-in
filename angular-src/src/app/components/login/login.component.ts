@@ -31,20 +31,22 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/']);
       }
     }, err => {
-      if(err.error == 'UserNotFound') {
-        this.flashService.show('Username Does Not Exist', 4000);
-      }
-      else if(err.error == 'IncompleteUserObject') {
-        this.flashService.show('Please Fill In All Fields', 4000);
-      }
-      else if(err.error == 'WrongPassword') {
-        this.flashService.show('Incorrect Password', 4000);
-      }
-      else if(err.error == 'Error') {
-        this.flashService.show('Server Error', 4000);
-      }
-      else {
-        this.flashService.show('Unknown Error', 4000);
+      if(err) {
+        if(err.error == 'UserNotFound') {
+          this.flashService.show('Username Does Not Exist', 4000);
+        }
+        else if(err.error == 'IncompleteUserObject') {
+          this.flashService.show('Please Fill In All Fields', 4000);
+        }
+        else if(err.error == 'WrongPassword') {
+          this.flashService.show('Incorrect Password', 4000);
+        }
+        else if(err.error == 'Error') {
+          this.flashService.show('Server Error', 4000);
+        }
+        else {
+          this.flashService.show('Unknown Error', 4000);
+        }
       }
     });
   }
