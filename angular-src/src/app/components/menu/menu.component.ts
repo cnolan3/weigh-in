@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/authService/auth.service';
+import { FlashService } from '../../services/flashService/flash.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,6 +12,7 @@ export class MenuComponent implements OnInit {
   user: any;
 
   constructor(private authService: AuthService,
+              private flashService: FlashService,
               private router: Router) { }
 
   ngOnInit() {
@@ -23,6 +25,7 @@ export class MenuComponent implements OnInit {
   }
 
   logout() {
+    this.flashService.show('Logged Out', 'info', 3000);
     this.authService.logOut();
     this.router.navigate(['/login']);
   }

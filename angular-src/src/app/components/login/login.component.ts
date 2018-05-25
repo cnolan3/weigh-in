@@ -27,25 +27,26 @@ export class LoginComponent implements OnInit {
 
     this.authService.authUser(newUser).subscribe((data: any) => {
       if(data.success) {
+        this.flashService.show('Logged In Successfully', 'success', 3000);
         this.authService.storeUserData(data.token, data.user);
         this.router.navigate(['/']);
       }
     }, err => {
       if(err) {
         if(err.error == 'UserNotFound') {
-          this.flashService.show('Username Does Not Exist', 4000);
+          this.flashService.show('Username Does Not Exist', 'warning', 4000);
         }
         else if(err.error == 'IncompleteUserObject') {
-          this.flashService.show('Please Fill In All Fields', 4000);
+          this.flashService.show('Please Fill In All Fields', 'warning', 4000);
         }
         else if(err.error == 'WrongPassword') {
-          this.flashService.show('Incorrect Password', 4000);
+          this.flashService.show('Incorrect Password', 'warning', 4000);
         }
         else if(err.error == 'Error') {
-          this.flashService.show('Server Error', 4000);
+          this.flashService.show('Server Error', 'warning', 4000);
         }
         else {
-          this.flashService.show('Unknown Error', 4000);
+          this.flashService.show('Unknown Error', 'warning', 4000);
         }
       }
     });

@@ -1,13 +1,33 @@
+@import "../../../../node_modules/bootswatch/dist/flatly/variables";
+
 .flash-container {
   position: absolute;
   top: 0;
   width: 100%;
   height: 56px;
-  color: #fff;
-  background-color: #ff7675;
-  border: 1px solid #d63031;
+//  border: 1px solid #d63031;
   z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.warning {
+  color: black;
+  background-color: $warning;
+}
+
+.danger {
+  color: white;
+  background-color: $danger;
+}
+
+.success {
+  color: white;
+  background-color: $success;
+}
+
+.info {
+  color: white;
+  background-color: $info;
 }

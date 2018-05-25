@@ -7,7 +7,7 @@ export class FlashService {
 
   constructor() { }
 
-  show(message, duration) { }
+  show(message, color, duration) { }
 
   hide() { }
 }

@@ -1,4 +1,4 @@
-<div (click)="hide()" @messageState *ngIf="active" class="flash-container">
+<div (click)="hide()" @messageState *ngIf="active" class="flash-container" [ngClass]="[color]">
   <div class="message">
     {{ message }}
   </div>

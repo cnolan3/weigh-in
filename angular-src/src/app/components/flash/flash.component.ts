@@ -21,15 +21,17 @@ import { FlashService } from '../../services/flashService/flash.service';
 export class FlashComponent implements OnInit {
   active: boolean = false;
   message: string = '';
+  color: any;
 
   constructor(private flashService: FlashService) { 
     this.flashService.show = this.show.bind(this);
     this.flashService.hide = this.hide.bind(this);
   }
 
-  show(message, duration) {
+  show(message, color, duration) {
     this.message = message;
     this.active = true;
+    this.color = color;
 
     setTimeout(() => {
       this.active = false;

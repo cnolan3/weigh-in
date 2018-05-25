@@ -30,11 +30,17 @@ const config = require(__dirname + '/../config/config.json')[env];
  * @apiSuccess (201) {String} author   username of author
  * @apiSuccess (201) {String} topic    topic (category) of posted debate
  *
- * @apiError (500) Error         database error
- * @apiError (404) TopicNotFound no topic by that name
- * @apiError (404) UserNotFount  no user with that username
+ * @apiError (400) IncompleteDebateObject incomplete object
+ * @apiError (500) Error                  database error
+ * @apiError (404) TopicNotFound          no topic by that name
+ * @apiError (404) UserNotFount           no user with that username
 **/
 router.post('/post', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  if(!req.body.title ||
+     !req.body.description ||
+     !req.body.topic)
+    return res.status(400).send('IncompleteDebateObject');
+
   console.log(req.body);
   models.user.findOne({
     where: { username: req.user.username }
@@ -245,6 +251,7 @@ router.post('/vote', passport.authenticate('jwt', { session: false }), (req, res
             res.status(201).json({ success: true, msg: "update" });
           }).catch(err => {
             res.status(500).send("Error");
+            throw err;
           });
         }
         else {
@@ -258,10 +265,12 @@ router.post('/vote', passport.authenticate('jwt', { session: false }), (req, res
             res.status(201).json({ success: true, msg: "sent" });
           }).catch(err => {
             res.status(500).send("Error");
+            throw err;
           });
         }
       }).catch(err => {
         res.status(500).send("Error");
+        throw err;
       });
     }
     else {
